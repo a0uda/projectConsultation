@@ -8,14 +8,17 @@ on:
       - 'frontend/**'
       - 'backend/**'
 
-stages:
-  - update_submodules
+jobs:
+  update_submodules_job:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
 
-update_submodules_job:
-  stage: update_submodules
-  script:
-    - git submodule sync --recursive
-    - git submodule update --init --recursive --remote
-    - git add .
-    - git commit -m "Updated submodules"
-    - git push origin main
+      - name: Update submodules
+        run: |
+          git submodule sync --recursive
+          git submodule update --init --recursive --remote
+          git add .
+          git commit -m "Update submodules"
+          git push origin main
