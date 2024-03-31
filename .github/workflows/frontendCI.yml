@@ -1,26 +1,21 @@
-on:
-  push:
-    branches:
+# CI for submodules
+
+name: CI
+
+stages:
+  - update_submodules
+
+update_submodules_job:
+  stage: update_submodules
+  only:
+    refs:
       - master
-    paths:
-      - 'frontend/**'
+    changes:
+      - frontend/**/*
+      - backend/**/*
 
-jobs:
-  update-main-project:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout main project
-        uses: actions/checkout@v2
-
-      - name: Update frontend submodule
-        run: |
-          cd frontend
-          git checkout master
-          git pull origin master
-          cd ..
-
-      - name: Commit submodule changes
-        run: |
-          git add frontend
-          git commit -m "Update frontend submodule"
-          git push origin main
+  script:
+    - git submodules sync --recursive
+    - git submodules update --init --recursive --remote
+    - git commit -am "Updated submodules"
+    - git push origin main
