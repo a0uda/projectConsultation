@@ -1,0 +1,26 @@
+on:
+  push:
+    branches:
+      - master
+    paths:
+      - 'frontend/**'
+
+jobs:
+  update-main-project:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout main project
+        uses: actions/checkout@v2
+
+      - name: Update frontend submodule
+        run: |
+          cd frontend
+          git checkout master
+          git pull origin master
+          cd ..
+
+      - name: Commit submodule changes
+        run: |
+          git add frontend
+          git commit -m "Update frontend submodule"
+          git push origin main
