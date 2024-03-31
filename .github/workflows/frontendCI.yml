@@ -1,21 +1,21 @@
-# CI for submodules
-
 name: CI
+
+on:
+  push:
+    branches:
+      - master
+    paths:
+      - 'frontend/**'
+      - 'backend/**'
 
 stages:
   - update_submodules
 
 update_submodules_job:
   stage: update_submodules
-  only:
-    refs:
-      - master
-    changes:
-      - frontend/**/*
-      - backend/**/*
-
   script:
-    - git submodules sync --recursive
-    - git submodules update --init --recursive --remote
-    - git commit -am "Updated submodules"
+    - git submodule sync --recursive
+    - git submodule update --init --recursive --remote
+    - git add .
+    - git commit -m "Updated submodules"
     - git push origin main
